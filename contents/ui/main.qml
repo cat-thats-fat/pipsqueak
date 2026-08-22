@@ -1,11 +1,13 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts 1.0
 import org.kde.plasma.plasmoid
 import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons as KQuickControlsAddons
 
 PlasmoidItem {
     id: rootcontainer
-
+    
     compactRepresentation: PlasmaComponents.ToolButton {
         id: compactButton
         anchors.fill: parent
@@ -18,17 +20,26 @@ PlasmoidItem {
         }
     }
 
-    
     fullRepresentation: Item {
+
         id: fullrep
+        Layout.preferredWidth: 640
+        Layout.preferredHeight: 450
+        Layout.minimumWidth: 420
+        Layout.minimumHeight: 300
+        KQuickControlsAddons.Clipboard { 
+            id: clipboard
+        }
+        
         property string selectedModel: ""
         property string modelText: selectedModel === "" ? "none" : selectedModel
+        
         function getModels() {
             var request = new XMLHttpRequest()
             var endpoint = plasmoid.configuration.endpoint
             if (endpoint.endsWith("/"))
                 endpoint = endpoint.slice(0, -1)
-    
+
             request.open("GET", endpoint + "/v1/models")
             request.onreadystatechange = function() {
                 if (request.readyState !== XMLHttpRequest.DONE)
@@ -44,6 +55,7 @@ PlasmoidItem {
             }
             modelList.clear()
             request.send()
+            console.log("request sent")
         }
         function sendPrompt() {
             var request = new XMLHttpRequest()
@@ -73,14 +85,10 @@ PlasmoidItem {
 
             request.send(JSON.stringify(body))
         }
+        
         ListModel {
             id: modelList
         }
-        
-        Layout.preferredWidth: 640
-        Layout.preferredHeight: 450
-        Layout.minimumWidth: 420
-        Layout.minimumHeight: 300
 
         ColumnLayout {
             anchors.fill: parent
@@ -102,7 +110,7 @@ PlasmoidItem {
                     text: "current model: " + modelText
                     Layout.alignment: Qt.AlignRight
                 }
-                
+
                 PlasmaComponents.Button {
                     id: sendButton
                     text: "Send"
@@ -114,6 +122,9 @@ PlasmoidItem {
                     id: clearButton
                     text: "Clear"
                     Layout.alignment: Qt.AlignRight
+                    onClicked: {
+                        promptArea.text = ""
+                    }
                 }
 
                 PlasmaComponents.Button {
@@ -126,12 +137,16 @@ PlasmoidItem {
                     Layout.alignment: Qt.AlignRight
                 }
             }
-
-            PlasmaComponents.TextArea {
-                id: promptArea
+            PlasmaComponents.ScrollView {
                 Layout.fillWidth: true
+                Layout.minimumWidth: 0
                 Layout.minimumHeight: 2
-                wrapMode: TextEdit.Wrap
+                Layout.maximumHeight: 150
+                ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AlwaysOff }
+                PlasmaComponents.TextArea {
+                    id: promptArea
+                    wrapMode: TextEdit.Wrap
+                }
             }
 
             RowLayout {
@@ -146,12 +161,16 @@ PlasmoidItem {
                     id: copyButton
                     text: "Copy"
                     Layout.alignment: Qt.AlignRight
+                    onClicked: {
+                        clipboard.content = responseArea.text
+                    }
                 }
             }
             PlasmaComponents.ScrollView {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.minimumWidth: 0
+                ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AlwaysOff }
                 PlasmaComponents.TextArea {
                     id: responseArea
                     readOnly: true
@@ -163,18 +182,21 @@ PlasmoidItem {
         PlasmaComponents.Popup {
             id: popup
             parent: dropdownButton
-            width: 250
-            height: 350
+            
+            width: 125
+
+            height: Math.max(30, Math.min(250, modelList.count * 30 + 16))
 
             x: parent.width - width
             y: parent.height
-            
+
             contentItem: ListView {
+                id: popupList
                 anchors {
                     fill: parent
                     leftMargin: 10
                     rightMargin: 10
-                    topMargin: 6
+                    topMargin: 10
                     bottomMargin: 10
                 }
                 clip: true
@@ -182,7 +204,8 @@ PlasmoidItem {
 
                 delegate: PlasmaComponents.ItemDelegate {
                     width: ListView.view.width
-                    id: index
+                    id: popupDelegate
+                    height: 30
                     text: model.name
                     onClicked: {
                         selectedModel = model.name
