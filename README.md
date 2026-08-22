@@ -5,6 +5,8 @@ Plasma 6 widget that sends a prompt to an OpenAI-compatible
 
 Default endpoint: `http://localhost:11434`.
 
+![pipsqueak](screenshot.png)
+
 ## Install
 
 ```
