@@ -1,0 +1,18 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "declanbatesmith@outlook.com",
+        "Name": "Declan Bate-Smith"
+      }
+    ],
+    "Category": "Local AI",
+    "Description": "Lightweight Ollama Widget",
+    "Name": "pipsqueak",
+    "Id": "ctf.pipsqueak",
+    "Icon": "message-new"
+  },
+  "Keywords": "AI;Ollama;",
+  "X-Plasma-API-Minimum-Version": "6.0"
+}
