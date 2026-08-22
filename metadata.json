@@ -10,7 +10,7 @@
     "Category": "Local AI",
     "Description": "Lightweight Ollama Widget",
     "Name": "pipsqueak",
-    "Id": "ctf.pipsqueak",
+    "Id": "pipsqueak",
     "Icon": "message-new"
   },
   "Keywords": "AI;Ollama;",
