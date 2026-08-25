@@ -13,12 +13,12 @@ Kirigami.FormLayout {
     }
     QQC2.TextField {
         id: endpoint
-        Kirigami.FormData.label: qsTr("Ollama Instance URL")
+        Kirigami.FormData.label: qsTr("OpenAI Compatible Endpoint:")
         placeholderText: qsTr("http://localhost:11434")
     }
     QQC2.TextField {
         id: systemPrompt
-        Kirigami.FormData.label: qsTr("systemPrompt")
+        Kirigami.FormData.label: qsTr("System Prompt:")
         placeholderText: qsTr("Help the user in the most efficient way you can.")
     }
 }
