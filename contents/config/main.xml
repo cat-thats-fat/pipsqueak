@@ -14,5 +14,7 @@
         <entry name="endpoint" type="String">
             <default>http://localhost:11434</default>
         </entry>
+        <entry name="systemPrompt" type="String">
+        </entry>
     </group>
 </kcfg>

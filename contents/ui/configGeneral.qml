@@ -5,7 +5,7 @@ import org.kde.kirigami 2.4 as Kirigami
 
 Kirigami.FormLayout {
     id: page
-  
+    property alias cfg_systemPrompt: systemPrompt.text
     property alias cfg_endpoint: endpoint.text
     Item {
         Layout.columnSpan: 2
@@ -13,7 +13,12 @@ Kirigami.FormLayout {
     }
     QQC2.TextField {
         id: endpoint
-        Kirigami.FormData.label: qsTr("Ollama Instance URL")
+        Kirigami.FormData.label: qsTr("OpenAI Compatible Endpoint:")
         placeholderText: qsTr("http://localhost:11434")
+    }
+    QQC2.TextField {
+        id: systemPrompt
+        Kirigami.FormData.label: qsTr("System Prompt:")
+        placeholderText: qsTr("Help the user in the most efficient way you can.")
     }
 }
