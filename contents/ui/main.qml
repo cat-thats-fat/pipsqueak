@@ -55,11 +55,11 @@ PlasmoidItem {
             }
             modelList.clear()
             request.send()
-            console.log("request sent")
         }
         function sendPrompt() {
             var request = new XMLHttpRequest()
             var endpoint = plasmoid.configuration.endpoint
+            var systemPrompt = plasmoid.configuration.systemPrompt
             if (endpoint.endsWith("/"))
                 endpoint = endpoint.slice(0, -1)
             request.open("POST", endpoint + "/v1/chat/completions")
@@ -69,9 +69,13 @@ PlasmoidItem {
                 model: selectedModel,
                 messages: [
                     {
+                        role: "system",
+                        content: systemPrompt
+                        },
+                    {
                         role: "user",
                         content: promptArea.text
-                    }
+                        }
                 ],
                 stream: false
             }
@@ -82,7 +86,6 @@ PlasmoidItem {
                 var response = JSON.parse(request.responseText)
                 responseArea.text = response.choices[0].message.content
             }
-
             request.send(JSON.stringify(body))
         }
         
@@ -184,7 +187,6 @@ PlasmoidItem {
             parent: dropdownButton
             
             width: 125
-
             height: Math.max(30, Math.min(250, modelList.count * 30 + 16))
 
             x: parent.width - width
